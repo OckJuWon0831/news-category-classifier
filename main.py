@@ -29,5 +29,5 @@ if __name__ == "__main__":
             "https://edition.cnn.com/article/sitemap-2024-5.html",
         ],
         stop_depth=1,
-        save_file="News_Articles.csv",
+        save_file="./data/News_Articles.csv",
     ).run()

@@ -16,8 +16,8 @@ class ContentHandler:
             "headline": "",
             "publisher": "",
             "description": "",
-            "article_section": "",
-            "keyword": "",
+            "category": "",
+            "keywords": "",
         }
 
     def file_article(self, html):
@@ -53,7 +53,7 @@ class ContentHandler:
                 soup.find("meta", {"name": "description"}).attrs["content"].strip()
             )
 
-            self.news_article["article_section"] = soup.find(
+            self.news_article["category"] = soup.find(
                 "meta", {"name": "meta-section"}
             ).attrs["content"]
 
