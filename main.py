@@ -5,7 +5,9 @@ from crawler.ContentHandler import ContentHandler
 
 logging.basicConfig(format="%(asctime)s %(levelname)s:%(message)s", level=logging.INFO)
 
-if __name__ == "__main__":
+
+# Original web crawler for CNN articles
+def run_crawler():
     content_handler = ContentHandler()
     WebCrawler(
         content_handler,
@@ -31,3 +33,7 @@ if __name__ == "__main__":
         stop_depth=1,
         save_file="./data/News_Articles.csv",
     ).run()
+
+
+if __name__ == "__main__":
+    run_crawler()
