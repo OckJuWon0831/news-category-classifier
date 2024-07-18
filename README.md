@@ -1,3 +1,30 @@
-1. Due to the required libraries' versions, the Python 3.10 must be installed for the local environment.
+Ock Ju Won - Submission on 19th July 2024
 
-2. Original web crawler for the CNN has been adopted but only two categories were crawled using the constructed spider. Therefore, another dataset from Kaggle has been implemented to test/train the constructed news category classifier model.
+1. A description of the data sources and the number of articles collected from each publisher.
+
+First of all, I planned to use a prominent news source mentioned in the assessment.pdf, CNN, for data crawling. However, I realized it would be more efficient for the spider to follow hyperlinks for individual news articles to scrape them. While searching for a website with such structured news articles, I discovered that CNN provides sitemaps organized by year for users. Here is an example sitemap link: https://edition.cnn.com/article/sitemap-2024.html.
+
+As shown in Image 1, I crawled over 3,000 articles based on CNN's sitemaps for two years. However, I encountered a problem. Despite expecting a variety of categories due to the nature of the data volume, only two categories, "sports" and "worlds," were classified. This led to the potential issue of overfitting with unnecessary data since around 3,000 articles fell into just these two categories. To create a news article classifier model with at least ten different news categories, I attempted to gather data from other sources like CNBC and BBC. However, 1) other websites do not provide sitemaps with structures similar to CNN, and 2) implementing this would take more time. Consequently, I decided to use a dataset from a data science platform like Kaggle: https://www.kaggle.com/datasets/rmisra/news-category-dataset
+
+This hyperlink points to a dataset covering Huffpost headlines from 2012 to 2022. So, I used 200,853 JSON-formatted data points for model training and testing in this project.
+
+2. Details of the data preprocessing and feature extraction techniques used.
+
+The data preprocessing process can be even more important than building the model itself in a data science project. To refine the 200,853 data points I received to make them suitable for model training, I primarily used Python's regular expression module re to extract words from square and curly brackets, remove numbers, and eliminate consecutive whitespace characters, among other noise removal rules inferred to extract words from sentences. I adopted a stopwords list inspired by links such as the following link: https://github.com/Yoast/YoastSEO.js/blob/develop/src/config/stopwords.js and implemented the logic to remove them. Additionally, I used the WordNetLemmatizer module for lemmatization. Through these steps, I was able to refine the text data for model training and testing.
+
+Subsequently, I implemented various useful modules, such as to_categorical() from Keras, which performs one-hot encoding. One-hot encoding is a method where the size of the word set becomes the dimension of the vector, and the index of the word we want to represent is assigned a value of 1, while other indices are assigned a value of 0. This vector representation of words is called a one-hot vector. Using this method, I numerically vectorized the refined words.
+
+The preprocessed data was then split into an 80:20 ratio for training and testing purposes.
+
+3. Information about the chosen classification algorithm and its performance metrics
+
+The classification algorithm built using the preprocessed data combines two models: a Word Embedding model and an LSTM model. Word Embedding represents words as vectors, transforming them into dense representations. Unlike one-hot encoding, dense representation does not consider the vector dimension as the size of the vocabulary. Instead, it adjusts the vector dimensions of all words to a user-defined value. Additionally, in this process, the vectors no longer only contain values of 0 and 1 but instead have real values. Utilizing this method, an LSTM model, which is traditionally used for analyzing continuous real values, was implemented. The LSTM model is one of the models suitable for predicting time series data. Image 3 shows the constructed model. The preprocessed data is passed through the Embedding layer and then through three Bidirectional LSTM layers for training.
+
+To verify the efficiency of the model during training, accuracy was adopted as the metric. While metrics such as MSE or MAE could be used, checking the correctness of word classification aligns best with the intent of this project, and accuracy is considered the most basic approach. Due to the large amount of data, the number of epochs was limited to 15. While increasing the batch size and the number of epochs could enable more efficient training sequences in a shorter amount of time, the accuracy of the LSTM model varies greatly depending on how the window size is handled. Therefore, in-depth analysis and approaches were avoided in this assessment.
+
+4. Insights into the model's strengths and limitations.
+
+As shown in Image 5, the model combining the Word Embedding layer and the LSTM algorithm demonstrates improved accuracy and loss metrics over the epochs. However, there are significant points to consider: 1) The model's accuracy barely surpasses 0.5, indicating that it is only slightly better than random guessing, making it ineffective for practical news classification. 2) The validation loss remains high at 1.78, suggesting that the model requires several improvements.
+The significance of this project lies in the insight that a combined model of LSTM and word embedding holds potential as an efficient NLP model. It also suggests that more sophisticated combinations of various models might yield better results.
+Instead of Word Embedding, using a learning method like Word2Vec to vectorize the data in a multidimensional space, followed by implementing a model like RNN, could capture more nuanced similarities between data points. Alternatively, adopting a transformer model, commonly used in LLMs, could provide a more creative approach. More meticulous word refinement techniques during the data pre-processing phase might also lead to meaningful results even when training with vectorized data in a one-dimensional space.
+These possible implementations highlight the limitations encountered while building the Word Embedding-LSTM model. Overcoming these limitations could lead to a more suitable news article classification model.
